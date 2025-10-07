@@ -1,39 +1,35 @@
+const CPF_LENGTH = 11
+const CPF_BODY_LENGTH = 9
+
 export function validateCpf (cpf: string) {
   if (!cpf) return false
-  cpf = cpf
-    .replace('.','')
-    .replace('.','')
-    .replace('-','')
-    .replace(" ","");
+  const cleanCpf = cleanCpfString(cpf)
+  if (cleanCpf.length !== CPF_LENGTH) return false
+  if (isSameNumberSequence(cleanCpf)) return false
 
-  if (cpf.length !== 11) return false
-  if (cpf.split("").every(c => c === cpf[0])) return false
+  const firstDigit = calculateDigit(cleanCpf, 10)
+  const secondDigit = calculateDigit(cleanCpf, 11)
+  const nDigVerific = cleanCpf.slice(CPF_BODY_LENGTH)
 
-  let d1 = 0;
-  let d2 = 0;
-  let dg1 = 0;
-  let dg2 = 0;
-  let rest = 0;
-  let nDigResult;
+  return nDigVerific === `${firstDigit}${secondDigit}`;
+}
 
-  for (let nCount = 1; nCount < cpf.length -1; nCount++) {
-      const digito = parseInt(cpf.substring(nCount -1, nCount));
-      d1 = d1 + ( 11 - nCount ) * digito;
-      d2 = d2 + ( 12 - nCount ) * digito;
-  };
+function cleanCpfString (cpf: string) {
+  return cpf.replace(/\D/g, '')
+}
 
-  rest = (d1 % 11);
-  dg1 = (rest < 2) ? dg1 = 0 : 11 - rest;
-  d2 += 2 * dg1;
-  rest = (d2 % 11);
+function isSameNumberSequence (cpf: string) {
+  const [firstDigit] = cpf
 
-  if (rest < 2)
-    dg2 = 0;
-  else
-    dg2 = 11 - rest;
+  return [...cpf].every(digit => digit === firstDigit)
+}
 
-  const nDigVerific = cpf.substring(cpf.length-2, cpf.length);
-  nDigResult = "" + dg1 + "" + dg2;
+function calculateDigit (cpf: string, factor: number) {
+  let sum = 0;
+  for (const digit of cpf) {
+    if (factor > 1) sum += parseInt(digit) * factor--;
+  }
+  const rest = sum % CPF_LENGTH;
 
-  return nDigVerific == nDigResult;
+  return (rest < 2) ? 0 : CPF_LENGTH - rest
 }
