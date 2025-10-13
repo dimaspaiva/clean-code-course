@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express'
 import pgp from 'pg-promise'
 import { validateCpf } from './validateCpf'
 import { validateName } from './validateName'
+import { validatePassword } from './validatePassword'
 
 async function main () {
   const connection = pgp()('postgres://postgres:123456@localhost:5432/app')
@@ -17,7 +18,7 @@ async function main () {
     if (!validateCpf(req.body.document)) {
       return res.status(400).json({ message: 'Invalid user document (CPF)' })
     }
-    if (!req.body.password.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)) {
+    if (!validatePassword(req.body.password)) {
       return res.status(400).json({ message: 'Invalid user document (CPF)' })
     }
 
