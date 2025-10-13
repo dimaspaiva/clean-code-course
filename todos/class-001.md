@@ -6,11 +6,11 @@
 
 ---
 
-- O campo `name` deve ser composto pelo nome e sobrenome
-- `email` deve ter `@` e um domínio como `.com` ou `.com.br`
-- `document` deve ser formado somente por números, `.` e `-`, sendo que o dígito verificador deve ser válido
-- `password` deve ter no mínimo 8 caracteres com letras minúsculas, maiúsculas e números
-- Deve retornar um **JSON** contendo o `accountId`
+- O campo `name` deve ser composto pelo nome e sobrenome ✅
+- `email` deve ter `@` e um domínio como `.com` ou `.com.br` ✅
+- `document` deve ser formado somente por números, `.` e `-`, sendo que o dígito verificador deve ser válido ✅
+- `password` deve ter no mínimo 8 caracteres com letras minúsculas, maiúsculas e números ✅
+- Deve retornar um **JSON** contendo o `accountId` ✅
 
 ---
 
