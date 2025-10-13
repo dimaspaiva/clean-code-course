@@ -67,4 +67,10 @@ describe('Signup', () => {
 
     await expect(axios.post("http://localhost:3000/signup", input)).rejects.toThrow('Request failed with status code 400')
   })
+
+  it('should return 404 when user does not exist', async () => {
+    const accountId = crypto.randomUUID()
+
+    await expect(axios.get(`http://localhost:3000/accounts/${accountId}`)).rejects.toThrow('Request failed with status code 404')
+  })
 })

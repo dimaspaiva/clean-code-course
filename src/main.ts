@@ -34,8 +34,11 @@ async function main () {
     })
   })
   app.get('/accounts/:accountId', async (req: Request, res: Response) => {
-    const [accountData] = await connection.query("select * from ccca.account where account_id = $1", [req.params.accountId])
-    res.json(accountData)
+      const [accountData] = await connection.query("select * from ccca.account where account_id = $1", [req.params.accountId])
+      if (!accountData) {
+        return res.status(404).json({ message: 'Account not found' })
+      }
+      return res.json(accountData)
   })
   app.listen(3000)
 }

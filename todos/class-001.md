@@ -18,5 +18,5 @@
 
 ### GET /accounts/:accountId
 
-- Deve retornar **404** caso a conta não exista
-- Deve retornar **200** caso a conta exista, juntamente com um **JSON** com `accountId`, `name`, `email` e `document`
+- Deve retornar **404** caso a conta não exista ✅
+- Deve retornar **200** caso a conta exista, juntamente com um **JSON** com `accountId`, `name`, `email` e `document` ✅
