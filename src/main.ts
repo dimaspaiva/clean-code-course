@@ -10,23 +10,24 @@ async function main () {
   const app = express()
   app.use(express.json())
   app.post('/signup', async (req: Request, res: Response) => {
-    if (!validateName(req.body.name)) {
+    const { document, email, name, password } = req.body
+    if (!validateName(name)) {
       return res.status(400).json({ message: 'Invalid user name' })
     }
-    if (!validateEmail(req.body.email)) {
+    if (!validateEmail(email)) {
       return res.status(400).json({ message: 'Invalid user e-mail' })
     }
-    if (!validateCpf(req.body.document)) {
+    if (!validateCpf(document)) {
       return res.status(400).json({ message: 'Invalid user document (CPF)' })
     }
-    if (!validatePassword(req.body.password)) {
+    if (!validatePassword(password)) {
       return res.status(400).json({ message: 'Invalid user document (CPF)' })
     }
 
     const accountId = crypto.randomUUID();
     await connection.query(
       'insert into ccca.account (account_id, name, email, document, password) values ($1, $2, $3, $4, $5)',
-      [accountId, req.body.name, req.body.email, req.body.document, req.body.password]
+      [accountId, name, email, document, password]
     )
     res.json({
       accountId
