@@ -3,6 +3,7 @@ import pgp from 'pg-promise'
 import { validateCpf } from './validateCpf'
 import { validateName } from './validateName'
 import { validatePassword } from './validatePassword'
+import { validateEmail } from './validateEmail'
 
 async function main () {
   const connection = pgp()('postgres://postgres:123456@localhost:5432/app')
@@ -12,7 +13,7 @@ async function main () {
     if (!validateName(req.body.name)) {
       return res.status(400).json({ message: 'Invalid user name' })
     }
-    if (!req.body.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+    if (!validateEmail(req.body.email)) {
       return res.status(400).json({ message: 'Invalid user e-mail' })
     }
     if (!validateCpf(req.body.document)) {
