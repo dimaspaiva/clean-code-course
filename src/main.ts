@@ -21,7 +21,7 @@ async function main () {
       return res.status(400).json({ message: 'Invalid user document (CPF)' })
     }
     if (!validatePassword(password)) {
-      return res.status(400).json({ message: 'Invalid user document (CPF)' })
+      return res.status(400).json({ message: 'Invalid user password' })
     }
 
     const accountId = crypto.randomUUID();
