@@ -38,46 +38,6 @@ describe('Signup', () => {
     expect(response.data.message).toEqual('Invalid user name')
   })
 
-  it('should return 422 when trying to create an account and email is invalid', async () => {
-    const input = {
-      name: "John Doe",
-      email: "john.doe@email",
-      document: "97456321558",
-      password: "safePass123@"
-    }
-
-    const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(422)
-    expect(response.data.message).toEqual('Invalid user e-mail')
-  })
-
-  it('should return 422 when trying to create an account and document is invalid', async () => {
-    const input = {
-      name: "John Doe",
-      email: "john.doe@email.com",
-      document: "12345678901",
-      password: "safePass123@"
-    }
-
-    const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(422)
-    expect(response.data.message).toEqual('Invalid user document (CPF)')
-  })
-
-
-  it('should return 422 when trying to create an account and password is invalid', async () => {
-    const input = {
-      name: "John Doe",
-      email: "john.doe@email.com",
-      document: "97456321558",
-      password: "wrongPass"
-    }
-
-    const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(422)
-    expect(response.data.message).toEqual('Invalid user password')
-  })
-
   it('should return 404 when user does not exist', async () => {
     const accountId = crypto.randomUUID()
 

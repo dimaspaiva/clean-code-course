@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import cors from 'cors'
-import { getAccount, signup } from './main'
+import { getAccount, signup } from './accountService'
 
 async function main () {
   const app = express()
