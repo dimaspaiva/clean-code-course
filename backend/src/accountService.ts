@@ -1,10 +1,8 @@
-import pgp from 'pg-promise'
 import { validateCpf } from './validateCpf'
 import { validateName } from './validateName'
 import { validatePassword } from './validatePassword'
 import { validateEmail } from './validateEmail'
-
-  const connection = pgp()('postgres://postgres:123456@localhost:5432/app')
+import { getAccountById, saveAccount } from './data'
 
 export async function signup (input: any) {
   const { document, email, name, password } = input
@@ -21,19 +19,22 @@ export async function signup (input: any) {
     throw new Error('Invalid user password')
   }
 
-  const accountId = crypto.randomUUID();
-  await connection.query(
-    'insert into ccca.account (account_id, name, email, document, password) values ($1, $2, $3, $4, $5)',
-    [accountId, name, email, document, password]
-  )
-  return { accountId }
+  const account = {
+    accountId: crypto.randomUUID(),
+    name,
+    email,
+    document,
+    password,
+  }
+  await saveAccount(account)
+  return { accountId: account.accountId }
 }
 
 export async function getAccount(accountId?: string) {
-    const [accountData] = await connection.query("select * from ccca.account where account_id = $1", [accountId])
-    if (!accountData) {
-      throw new Error('Account not found')
-    }
-    return accountData
+  const accountData = await getAccountById(accountId)
+  if (!accountData) {
+    throw new Error('Account not found')
+  }
+  return accountData
 }
 
