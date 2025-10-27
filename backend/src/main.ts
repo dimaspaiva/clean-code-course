@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import pgp from 'pg-promise'
+import cors from 'cors'
 import { validateCpf } from './validateCpf'
 import { validateName } from './validateName'
 import { validatePassword } from './validatePassword'
@@ -9,6 +10,7 @@ async function main () {
   const connection = pgp()('postgres://postgres:123456@localhost:5432/app')
   const app = express()
   app.use(express.json())
+  app.use(cors())
   app.post('/signup', async (req: Request, res: Response) => {
     const { document, email, name, password } = req.body
     if (!validateName(name)) {
