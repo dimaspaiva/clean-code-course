@@ -1,5 +1,7 @@
 import axios from "axios"
 
+axios.defaults.validateStatus = () => true
+
 describe('Signup', () => {
   it('should create an account', async () => {
     const input = {
@@ -31,7 +33,9 @@ describe('Signup', () => {
       password: "safePass123@"
     }
 
-    await expect(axios.post("http://localhost:3000/signup", input)).rejects.toThrow('Request failed with status code 400')
+    const response = await axios.post("http://localhost:3000/signup", input)
+    expect(response.status).toBe(400)
+    expect(response.data.message).toEqual('Invalid user name')
   })
 
   it('should return 400 when trying to create an account and email is invalid', async () => {
@@ -42,7 +46,9 @@ describe('Signup', () => {
       password: "safePass123@"
     }
 
-    await expect(axios.post("http://localhost:3000/signup", input)).rejects.toThrow('Request failed with status code 400')
+    const response = await axios.post("http://localhost:3000/signup", input)
+    expect(response.status).toBe(400)
+    expect(response.data.message).toEqual('Invalid user e-mail')
   })
 
   it('should return 400 when trying to create an account and document is invalid', async () => {
@@ -53,7 +59,9 @@ describe('Signup', () => {
       password: "safePass123@"
     }
 
-    await expect(axios.post("http://localhost:3000/signup", input)).rejects.toThrow('Request failed with status code 400')
+    const response = await axios.post("http://localhost:3000/signup", input)
+    expect(response.status).toBe(400)
+    expect(response.data.message).toEqual('Invalid user document (CPF)')
   })
 
 
@@ -61,16 +69,19 @@ describe('Signup', () => {
     const input = {
       name: "John Doe",
       email: "john.doe@email.com",
-      document: "12345678901",
-      password: "safePass123@"
+      document: "97456321558",
+      password: "wrongPass"
     }
 
-    await expect(axios.post("http://localhost:3000/signup", input)).rejects.toThrow('Request failed with status code 400')
+    const response = await axios.post("http://localhost:3000/signup", input)
+    expect(response.status).toBe(400)
+    expect(response.data.message).toEqual('Invalid user password')
   })
 
   it('should return 404 when user does not exist', async () => {
     const accountId = crypto.randomUUID()
 
-    await expect(axios.get(`http://localhost:3000/accounts/${accountId}`)).rejects.toThrow('Request failed with status code 404')
+    const response = await axios.get(`http://localhost:3000/accounts/${accountId}`)
+    expect(response.status).toBe(404)
   })
 })
