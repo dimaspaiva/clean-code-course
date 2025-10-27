@@ -1,48 +1,39 @@
-import express, { Request, Response } from 'express'
 import pgp from 'pg-promise'
-import cors from 'cors'
 import { validateCpf } from './validateCpf'
 import { validateName } from './validateName'
 import { validatePassword } from './validatePassword'
 import { validateEmail } from './validateEmail'
 
-async function main () {
   const connection = pgp()('postgres://postgres:123456@localhost:5432/app')
-  const app = express()
-  app.use(express.json())
-  app.use(cors())
-  app.post('/signup', async (req: Request, res: Response) => {
-    const { document, email, name, password } = req.body
-    if (!validateName(name)) {
-      return res.status(400).json({ message: 'Invalid user name' })
-    }
-    if (!validateEmail(email)) {
-      return res.status(400).json({ message: 'Invalid user e-mail' })
-    }
-    if (!validateCpf(document)) {
-      return res.status(400).json({ message: 'Invalid user document (CPF)' })
-    }
-    if (!validatePassword(password)) {
-      return res.status(400).json({ message: 'Invalid user password' })
-    }
 
-    const accountId = crypto.randomUUID();
-    await connection.query(
-      'insert into ccca.account (account_id, name, email, document, password) values ($1, $2, $3, $4, $5)',
-      [accountId, name, email, document, password]
-    )
-    res.json({
-      accountId
-    })
-  })
-  app.get('/accounts/:accountId', async (req: Request, res: Response) => {
-      const [accountData] = await connection.query("select * from ccca.account where account_id = $1", [req.params.accountId])
-      if (!accountData) {
-        return res.status(404).json({ message: 'Account not found' })
-      }
-      return res.json(accountData)
-  })
-  app.listen(3000)
+export async function signup (input: any) {
+  const { document, email, name, password } = input
+  if (!validateName(name)) {
+    throw new Error('Invalid user name')
+  }
+  if (!validateEmail(email)) {
+    throw new Error('Invalid user e-mail')
+  }
+  if (!validateCpf(document)) {
+    throw new Error('Invalid user document (CPF)')
+  }
+  if (!validatePassword(password)) {
+    throw new Error('Invalid user password')
+  }
+
+  const accountId = crypto.randomUUID();
+  await connection.query(
+    'insert into ccca.account (account_id, name, email, document, password) values ($1, $2, $3, $4, $5)',
+    [accountId, name, email, document, password]
+  )
+  return { accountId }
 }
 
-main()
+export async function getAccount(accountId?: string) {
+    const [accountData] = await connection.query("select * from ccca.account where account_id = $1", [accountId])
+    if (!accountData) {
+      throw new Error('Account not found')
+    }
+    return accountData
+}
+

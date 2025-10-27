@@ -25,7 +25,7 @@ describe('Signup', () => {
     expect(outputGetAccount.document).toBe(input.document)
   })
 
-  it('should return 400 when trying to create an account and name is incorrect', async () => {
+  it('should return 422 when trying to create an account and name is incorrect', async () => {
     const input = {
       name: "John",
       email: "john.doe@email.com",
@@ -34,11 +34,11 @@ describe('Signup', () => {
     }
 
     const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(422)
     expect(response.data.message).toEqual('Invalid user name')
   })
 
-  it('should return 400 when trying to create an account and email is invalid', async () => {
+  it('should return 422 when trying to create an account and email is invalid', async () => {
     const input = {
       name: "John Doe",
       email: "john.doe@email",
@@ -47,11 +47,11 @@ describe('Signup', () => {
     }
 
     const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(422)
     expect(response.data.message).toEqual('Invalid user e-mail')
   })
 
-  it('should return 400 when trying to create an account and document is invalid', async () => {
+  it('should return 422 when trying to create an account and document is invalid', async () => {
     const input = {
       name: "John Doe",
       email: "john.doe@email.com",
@@ -60,12 +60,12 @@ describe('Signup', () => {
     }
 
     const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(422)
     expect(response.data.message).toEqual('Invalid user document (CPF)')
   })
 
 
-  it('should return 400 when trying to create an account and password is invalid', async () => {
+  it('should return 422 when trying to create an account and password is invalid', async () => {
     const input = {
       name: "John Doe",
       email: "john.doe@email.com",
@@ -74,7 +74,7 @@ describe('Signup', () => {
     }
 
     const response = await axios.post("http://localhost:3000/signup", input)
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(422)
     expect(response.data.message).toEqual('Invalid user password')
   })
 
