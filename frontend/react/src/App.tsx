@@ -10,7 +10,6 @@ function App() {
 
   async function signup() {
     try {
-      console.log(JSON.stringify({ name, email, document, password }));
       const response = await fetch("http://localhost:3000/signup", {
         method: "POST",
         headers: {
